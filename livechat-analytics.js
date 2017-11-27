@@ -2,8 +2,6 @@ var ANALYTICS_DOMAIN = 'https://example.com'
 var CHAT_OPENED_ENDPOINT = '/chat_opened'
 var PAGE_VIEW_ENDPOINT = '/page_view'
 
-function noop() {}
-
 function request(path, params) {
   var img = document.createElement('img');
   img.src = ANALYTICS_DOMAIN + path;
@@ -15,8 +13,8 @@ function request(path, params) {
 
 function callBoth(f1, f2) {
   return function(data) {
-    (f1 || noop)(data);
-    (f2 || noop)(data);
+    if (f1) f1(data)
+    if (f2) f2(data)
   }
 }
 
