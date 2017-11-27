@@ -18,15 +18,15 @@ function request(url, params) {
   document.querySelector('body').appendChild(img);
 }
 
-function callBoth(f1, f2) {
-  return function(data) {
-    if (f1) f1(data)
-    if (f2) f2(data)
+function callBoth(f1, f2, context) {
+  return function() {
+    if (f1) f1.apply(context || window, arguments)
+    if (f2) f2.apply(context || window, arguments)
   }
 }
 
 var addLivechatCallback = function(event, callback) {
-  LC_API[event] = callBoth(LC_API[event], callback)
+  LC_API[event] = callBoth(LC_API[event], callback, LC_API)
 }
 
 // The server sets a cookie when a chat is opened.
@@ -44,3 +44,8 @@ request(getPageViewUrl())
 window.addEventListener('popstate', function(event) {
   request(getPageViewUrl())
 })
+
+// There's no event for `pushState`, workaround:
+window.history.pushState = callBoth(window.history.pushState, function() {
+  request(getPageViewUrl())
+}, window.history)
