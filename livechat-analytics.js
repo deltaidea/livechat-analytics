@@ -1,10 +1,17 @@
-var ANALYTICS_DOMAIN = 'https://example.com'
-var CHAT_OPENED_ENDPOINT = '/chat_opened'
-var PAGE_VIEW_ENDPOINT = '/page_view'
+// See https://docs.livechatinc.com/js-api/#using-chat-window-api
+var LC_API = LC_API || {}
 
-function request(path, params) {
+function getChatOpenedUrl() {
+  return 'https://example.com/chat_opened?visitor_id=' + LC_API.get_visitor_id()
+}
+
+function getPageViewUrl() {
+  return 'https://example.com/page_view?page_url=' + encodeURIComponent(window.location.toString())
+}
+
+function request(url, params) {
   var img = document.createElement('img');
-  img.src = ANALYTICS_DOMAIN + path;
+  img.src = url;
   img.onerror = img.onload = function() {
     img.parentElement.removeChild(img);
   }
@@ -18,8 +25,6 @@ function callBoth(f1, f2) {
   }
 }
 
-var LC_API = LC_API || {}
-
 var addLivechatCallback = function(event, callback) {
   LC_API[event] = callBoth(LC_API[event], callback)
 }
@@ -27,15 +32,15 @@ var addLivechatCallback = function(event, callback) {
 // The server sets a cookie when a chat is opened.
 
 addLivechatCallback('on_chat_window_opened', function() {
-  request(CHAT_OPENED_ENDPOINT + '?visitor_id=' + LC_API.get_visitor_id())
+  request(getChatOpenedUrl())
 })
 
 // Log page views. If the `visitor_id` cookie is not set, these requests should be ignored.
 
 // Track initial page load.
-request(PAGE_VIEW_ENDPOINT + '?page_url=' + encodeURIComponent(window.location.toString()))
+request(getPageViewUrl())
 
 // Track HTML5 History API page changes.
 window.addEventListener('popstate', function(event) {
-  request(PAGE_VIEW_ENDPOINT + '?page_url=' + encodeURIComponent(window.location.toString()))
+  request(getPageViewUrl())
 })
