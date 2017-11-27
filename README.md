@@ -4,12 +4,11 @@ Log embedded LiveChat events to a custom domain.
 
 ## Documentation
 
-You can adjust the target domain at the top of the script:
+You can adjust the target endpoints at the top of the script:
 
 ```JavaScript
-var ANALYTICS_DOMAIN = 'https://example.com'
-var CHAT_OPENED_ENDPOINT = '/chat_opened'
-var PAGE_VIEW_ENDPOINT = '/page_view'
+var CHAT_OPENED_URL_PREFIX = 'https://example.com/chat_opened?visitor_id='
+var PAGE_VIEW_URL_PREFIX = 'https://example.com/page_view?page_url='
 ```
 
 The script does the following two kinds of requests.

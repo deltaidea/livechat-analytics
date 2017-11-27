@@ -1,13 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+  var CHAT_OPENED_URL_PREFIX = 'https://example.com/chat_opened?visitor_id='
+  var PAGE_VIEW_URL_PREFIX = 'https://example.com/page_view?page_url='
+
   // See https://docs.livechatinc.com/js-api/#using-chat-window-api
   var LC_API = LC_API || {}
 
   function getChatOpenedUrl() {
-    return 'https://example.com/chat_opened?visitor_id=' + LC_API.get_visitor_id()
+    return CHAT_OPENED_URL_PREFIX + LC_API.get_visitor_id()
   }
 
   function getPageViewUrl() {
-    return 'https://example.com/page_view?page_url=' + encodeURIComponent(window.location.toString())
+    return PAGE_VIEW_URL_PREFIX + encodeURIComponent(window.location.toString())
   }
 
   function request(url, params) {
