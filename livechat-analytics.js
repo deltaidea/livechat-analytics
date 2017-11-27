@@ -5,9 +5,12 @@ var PAGE_VIEW_ENDPOINT = '/page_view'
 function noop() {}
 
 function request(path, params) {
-  var req = new XMLHttpRequest()
-  req.open('GET', ANALYTICS_DOMAIN + path)
-  req.send()
+  var img = document.createElement('img');
+  img.src = ANALYTICS_DOMAIN + path;
+  img.onerror = img.onload = function() {
+    img.parentElement.removeChild(img);
+  }
+  document.querySelector('body').appendChild(img);
 }
 
 function callBoth(f1, f2) {
